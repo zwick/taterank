@@ -1,0 +1,77 @@
+[
+  {
+    "Name": "Zwick",
+    "PK": "User#b10b0ab4-78db-46cb-8c64-cd8dee23799f",
+    "SK": "Meta"
+  },
+  {
+    "Name": "Potatoes",
+    "PK": "Category#Potatoes",
+    "SK": "Meta"
+  },
+  {
+    "Name": "Curly Fries",
+    "PK": "Category#Potatoes",
+    "SK": "Preparation#015751e7-658c-4e0f-9565-46db56c79761",
+    "Image": "https://via.placeholder.com/65x65"
+  },
+  {
+    "Name": "Potato Salad",
+    "PK": "Category#Potatoes",
+    "SK": "Preparation#255e7ad1-533e-4998-87ba-482f9321c25d",
+    "Image": "https://via.placeholder.com/65x65"
+  },
+  {
+    "Name": "Mashed Potatoes",
+    "PK": "Category#Potatoes",
+    "SK": "Preparation#7bcee346-0964-40dd-aa56-0c99db545a49",
+    "Image": "https://via.placeholder.com/65x65"
+  },
+  {
+    "Name": "Potato Chips",
+    "PK": "Category#Potatoes",
+    "SK": "Preparation#e140fefb-40cb-431d-8c57-8372d4321db8",
+    "Image": "https://via.placeholder.com/65x65"
+  },
+  {
+    "Name": "French Fries",
+    "PK": "Category#Potatoes",
+    "SK": "Preparation#f69f1ad2-e95d-4d70-b90f-ea61f4403b76",
+    "Image": "https://via.placeholder.com/65x65"
+  },
+  {
+    "Name": "Baked Potato",
+    "PK": "Category#Potatoes",
+    "SK": "Preparation#fb7a06b9-6136-46f1-9f57-3f64d05b79a0",
+    "Image": "https://via.placeholder.com/65x65"
+  },
+  {
+    "PK": "Category#Potatoes",
+    "SK": "Ranking#75bf4962-82aa-4ccc-b22a-03ca26e8a8ca",
+    "User": "User#4ec7d361-60e6-43ab-9564-b47265f1e8f1",
+    "Votes": {
+      "0": "Preparation#015751e7-658c-4e0f-9565-46db56c79761",
+      "1": "Preparation#7bcee346-0964-40dd-aa56-0c99db545a49",
+      "2": "Preparation#fb7a06b9-6136-46f1-9f57-3f64d05b79a0",
+      "3": "Preparation#255e7ad1-533e-4998-87ba-482f9321c25d",
+      "4": "Preparation#f69f1ad2-e95d-4d70-b90f-ea61f4403b76"
+    }
+  },
+  {
+    "PK": "Category#Potatoes",
+    "SK": "Ranking#75bf4962-82aa-4ccc-b22a-03ca26e8a8ca#Vote#44885c99-7623-4b8e-847a-4a38dd441216",
+    "User": "User#b10b0ab4-78db-46cb-8c64-cd8dee23799f",
+    "Type": "upvote"
+  },
+  {
+    "PK": "Category#Potatoes",
+    "SK": "Ranking#75bf4962-82aa-4ccc-b22a-03ca26e8a8ca#Vote#c49d2236-90cf-4221-921f-a93312b27877",
+    "User": "Session#0df15df0-70a0-4ac2-a2a4-e35f3080e4a5",
+    "Type": "upvote"
+  },
+  {
+    "Name": "Günther",
+    "PK": "User#4ec7d361-60e6-43ab-9564-b47265f1e8f1",
+    "SK": "Meta"
+  }
+]
