@@ -9,6 +9,7 @@ import (
 
 func listRankings(w http.ResponseWriter, r *http.Request) {
 	// Get top rankings
+	w.Write([]byte("Hello, World!"))
 }
 
 func listRecentRankings(w http.ResponseWriter, r *http.Request) {
