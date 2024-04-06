@@ -11,6 +11,7 @@
   },
   {
     "Name": "Curly Fries",
+    "Description": "Curly fries are a type of French fry characterized by their helical shape, which is formed by cutting the potato in a spiral shape before frying.",
     "PK": "Category#Potatoes",
     "SK": "Preparation#015751e7-658c-4e0f-9565-46db56c79761",
     "Image": "https://via.placeholder.com/65x65"
@@ -49,7 +50,7 @@
     "PK": "Category#Potatoes",
     "SK": "Ranking#75bf4962-82aa-4ccc-b22a-03ca26e8a8ca",
     "User": "User#4ec7d361-60e6-43ab-9564-b47265f1e8f1",
-    "Votes": {
+    "Rank": {
       "0": "Preparation#015751e7-658c-4e0f-9565-46db56c79761",
       "1": "Preparation#7bcee346-0964-40dd-aa56-0c99db545a49",
       "2": "Preparation#fb7a06b9-6136-46f1-9f57-3f64d05b79a0",
