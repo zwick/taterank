@@ -14,10 +14,12 @@ TABLE_NAME="Taterank-dev"
 CUSTOM_ENDPOINT="http://localhost:4566"
 
 # Set the data file path
-DATA_FILE="./seeds/dynamodb-seed-data.json"
+DATA_FILE="$(pwd)/seeds/dynamodb-seed-data.json"
+
+# Generate seed file
+
 
 # Run the AWS CLI Docker container and execute the batch write command
-echo $(pwd)
 docker run --rm -v $DATA_FILE:/data.json $AWS_CLI_IMAGE dynamodb batch-write-item \
   --region $AWS_REGION \
   --endpoint-url $CUSTOM_ENDPOINT \
