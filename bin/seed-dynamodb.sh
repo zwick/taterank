@@ -8,19 +8,23 @@ AWS_REGION="us-east-1"
 AWS_ACCESS_KEY_ID="test"
 AWS_SECRET_ACCESS_KEY="test"
 
-# Set the DynamoDB table name
-TABLE_NAME="Taterank-dev"
 # Set the custom endpoint URL
 CUSTOM_ENDPOINT="http://localhost:4566"
 
 # Set the data file path
 DATA_FILE="$(pwd)/seeds/dynamodb-seed-data.json"
+CREDS_FILE="$(pwd)/development/credentials"
 
-# Generate seed file
-
+# Generate seed filed
 
 # Run the AWS CLI Docker container and execute the batch write command
-docker run --rm -v $DATA_FILE:/data.json $AWS_CLI_IMAGE dynamodb batch-write-item \
-  --region $AWS_REGION \
+docker run --rm \
+  --net=host \
+  -v $DATA_FILE:/data.json \
+  -e AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID \
+  -e AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \
+  $AWS_CLI_IMAGE dynamodb batch-write-item --request-items file:///data.json \
   --endpoint-url $CUSTOM_ENDPOINT \
-  --request-items file:///data.json
+  --region=$AWS_REGION
+
+echo "Seeding dynamodb complete!"

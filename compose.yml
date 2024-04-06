@@ -4,7 +4,7 @@ services:
   localstack:
     image: localstack/localstack
     ports:
-      - "4566:4566" # LocalStack Gateway
+      - "0.0.0.0:4566:4566" # LocalStack Gateway
     environment:
       # LocalStack configuration: https://docs.localstack.cloud/references/configuration/
       - DEBUG=${DEBUG:-0}
@@ -23,3 +23,10 @@ services:
       - REGION=us-east-1
       - AWS_ACCESS_KEY_ID=test
       - AWS_SECRET_ACCESS_KEY=test
+  air:
+    image: cosmtrek/air
+    working_dir: /server
+    ports:
+      - "3030:3030"
+    volumes:
+      - ./server:/server
