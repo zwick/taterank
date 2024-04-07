@@ -5,6 +5,7 @@ import (
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
+	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/expression"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 )
@@ -20,6 +21,34 @@ type Tater struct {
 
 type TaterModel struct {
 	DB *dynamodb.Client
+}
+
+func (m *TaterModel) Get() ([]*Tater, error) {
+	keyExpression := expression.Key("PK").Equal(expression.Value(PK))
+	expression, err := expression.NewBuilder().WithKeyCondition(keyExpression).Build()
+
+	if err != nil {
+		return nil, err
+	}
+
+	input := &dynamodb.QueryInput{
+		TableName:                 aws.String(TableName),
+		KeyConditionExpression:    expression.KeyCondition(),
+		ExpressionAttributeValues: expression.Values(),
+		ExpressionAttributeNames:  expression.Names(),
+	}
+
+	result, err := m.DB.Query(context.TODO(), input)
+
+	if err != nil {
+		return nil, err
+	}
+
+	taters := []*Tater{}
+
+	attributevalue.UnmarshalListOfMaps(result.Items, &taters)
+
+	return taters, nil
 }
 
 // Retrieves a tater by ID
