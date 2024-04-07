@@ -1,0 +1,36 @@
+version: "3.8"
+
+services:
+  localstack:
+    image: localstack/localstack
+    ports:
+      - "0.0.0.0:4566:4566" # LocalStack Gateway
+    environment:
+      - DEBUG=${DEBUG:-0}
+      - PERSISTENCE=1
+    volumes:
+      - ./development/tmp-data/localstack:/var/lib/localstack
+      - "/var/run/docker.sock:/var/run/docker.sock"
+  dynamodb-admin:
+    depends_on:
+      - localstack
+    image: aaronshaf/dynamodb-admin
+    ports:
+      - "8001:8001"
+    environment:
+      - DYNAMO_ENDPOINT=http://localstack:4566
+      - REGION=us-east-1
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+  air:
+    image: cosmtrek/air
+    working_dir: /server
+    environment:
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+      - AWS_ENDPOINT_URL=http://localstack:4566
+      - AWS_DEFAULT_REGION=us-east-1
+    ports:
+      - "3030:3030"
+    volumes:
+      - ./server:/server

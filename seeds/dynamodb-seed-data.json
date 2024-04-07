@@ -1,0 +1,136 @@
+{
+  "Taterank-dev": [
+    {
+      "PutRequest": {
+        "Item": {
+          "Name": { "S": "Zwick" },
+          "PK": { "S": "User#b10b0ab4-78db-46cb-8c64-cd8dee23799f" },
+          "ID": { "S": "Meta" }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "Name": { "S": "Potatoes" },
+          "PK": { "S": "Category#Potatoes" },
+          "ID": { "S": "Meta" }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "Name": { "S": "Curly Fries" },
+          "Description": {
+            "S": "Curly fries are a type of French fry characterized by their helical shape, which is formed by cutting the potato in a spiral shape before frying."
+          },
+          "PK": { "S": "Category#Potatoes" },
+          "ID": { "S": "46db56c79761" },
+          "Image": { "S": "https://via.placeholder.com/65x65" }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "Name": { "S": "Potato Salad" },
+          "PK": { "S": "Category#Potatoes" },
+          "ID": { "S": "482f9321c25d" },
+          "Image": { "S": "https://via.placeholder.com/65x65" }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "Name": { "S": "Mashed Potatoes" },
+          "PK": { "S": "Category#Potatoes" },
+          "ID": { "S": "0c99db545a49" },
+          "Image": { "S": "https://via.placeholder.com/65x65" }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "Name": { "S": "Potato Chips" },
+          "PK": { "S": "Category#Potatoes" },
+          "ID": { "S": "8372d4321db8" },
+          "Image": { "S": "https://via.placeholder.com/65x65" }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "Name": { "S": "French Fries" },
+          "PK": { "S": "Category#Potatoes" },
+          "ID": { "S": "ea61f4403b76" },
+          "Image": { "S": "https://via.placeholder.com/65x65" }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "Name": { "S": "Baked Potato" },
+          "PK": { "S": "Category#Potatoes" },
+          "ID": { "S": "3f64d05b79a0" },
+          "Image": { "S": "https://via.placeholder.com/65x65" }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "PK": { "S": "Category#Potatoes" },
+          "ID": { "S": "03ca26e8a8ca" },
+          "User": { "S": "User#4ec7d361-60e6-43ab-9564-b47265f1e8f1" },
+          "Rank": {
+            "M": {
+              "0": { "S": "46db56c79761" },
+              "1": { "S": "0c99db545a49" },
+              "2": { "S": "3f64d05b79a0" },
+              "3": { "S": "482f9321c25d" },
+              "4": { "S": "ea61f4403b76" }
+            }
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "PK": { "S": "Category#Potatoes" },
+          "ID": {
+            "S": "4a38dd441216"
+          },
+          "User": { "S": "User#cd8dee23799f" },
+          "Type": { "S": "upvote" }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "PK": { "S": "Category#Potatoes" },
+          "ID": {
+            "S": "a93312b27877"
+          },
+          "User": { "S": "Session#0df15df0-70a0-4ac2-a2a4-e35f3080e4a5" },
+          "Type": { "S": "upvote" }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "Name": { "S": "Günther" },
+          "PK": { "S": "User#4ec7d361-60e6-43ab-9564-b47265f1e8f1" },
+          "ID": { "S": "Meta" }
+        }
+      }
+    }
+  ]
+}
