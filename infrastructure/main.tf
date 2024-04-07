@@ -20,11 +20,12 @@ provider "aws" {
 resource "aws_dynamodb_table" "table" {
   name      = local.dynamo_table_name
   hash_key  = "PK"
-  range_key = "SK"
+  range_key = "ID"
+
 
   table_class                 = "STANDARD"
   billing_mode                = "PAY_PER_REQUEST"
-  deletion_protection_enabled = true
+  deletion_protection_enabled = false
   stream_enabled              = false
 
   attribute {
@@ -33,7 +34,7 @@ resource "aws_dynamodb_table" "table" {
   }
 
   attribute {
-    name = "SK"
+    name = "ID"
     type = "S"
   }
 
