@@ -30,6 +30,25 @@ func (app *application) getTater(w http.ResponseWriter, r *http.Request) {
 	w.Write(response)
 }
 
+func (app *application) listTaters(w http.ResponseWriter, r *http.Request) {
+	taters, err := app.taters.Get()
+
+	if err != nil {
+		app.serverError(w, r, err)
+		return
+	}
+
+	response, err := json.Marshal(taters)
+
+	if err != nil {
+		app.serverError(w, r, err)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(response)
+}
+
 func (app *application) listRankings(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusNotImplemented)
 	w.Write([]byte{})

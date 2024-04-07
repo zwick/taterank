@@ -7,6 +7,7 @@ func (app *application) routes() http.Handler {
 
 	// Taters
 	mux.HandleFunc("GET /api/taters/{id}", app.getTater)
+	mux.HandleFunc("GET /api/taters", app.listTaters)
 
 	// Rankings
 	mux.HandleFunc("GET /api/rankings", app.listRankings)
