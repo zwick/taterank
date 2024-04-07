@@ -30,6 +30,7 @@ func (app *application) getTater(w http.ResponseWriter, r *http.Request) {
 	w.Write(response)
 }
 
+// List all taters
 func (app *application) listTaters(w http.ResponseWriter, r *http.Request) {
 	taters, err := app.taters.Get()
 
