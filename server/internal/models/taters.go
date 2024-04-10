@@ -15,8 +15,8 @@ var PK = "Category#Potatoes"
 
 type Tater struct {
 	ID          string `json:"id"`
-	Name        string `json:"json"`
-	Description string `json:"desc"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
 }
 
 type TaterModel struct {

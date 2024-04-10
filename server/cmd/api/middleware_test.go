@@ -69,5 +69,5 @@ func TestRequestLogger(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	assert.Equal(t, expected, actual)
+	assert.Equals(t, expected, actual)
 }
