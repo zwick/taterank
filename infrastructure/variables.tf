@@ -15,3 +15,9 @@ variable "environment" {
   description = "Environment name for deployment"
   default     = "dev"
 }
+
+variable "localstack" {
+  type        = bool
+  description = "Use localstack for local development"
+  default     = false
+}
