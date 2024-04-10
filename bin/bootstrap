@@ -28,10 +28,9 @@ fi
 
 echo "Running Terraform..."
 
-docker run --rm --net=host -v "$(pwd)/infrastructure:/app" -w /app hashicorp/terraform:latest init -input=false
-# TO-DO: There might be a better way to purge Dynamo. For now, this works and recreates the tables.
-docker run --rm --net=host -v "$(pwd)/infrastructure:/app" -w /app hashicorp/terraform:latest apply -input=false -auto-approve -destroy
-docker run --rm --net=host -v "$(pwd)/infrastructure:/app" -w /app hashicorp/terraform:latest apply -input=false -auto-approve
+docker run --rm --net=host -v "$(pwd)/infrastructure:/app" -w /app hashicorp/terraform:latest init -var "localstack=true" -input=false
+docker run --rm --net=host -v "$(pwd)/infrastructure:/app" -w /app hashicorp/terraform:latest destroy -var "localstack=true" -input=false -auto-approve
+docker run --rm --net=host -v "$(pwd)/infrastructure:/app" -w /app hashicorp/terraform:latest apply -var "localstack=true" -input=false -auto-approve
 
 echo "Terraform complete!"
 

@@ -39,3 +39,14 @@ terraform destroy
 ```
 
 Be very careful. Running this command will result in the loss of all data in the DynamoDB instance.
+
+### Localstack development
+
+This Terraform deployment supports deploying to localstack. To deploy to localstack, instead run
+
+```shell
+terraform apply -var 'localstack=true'
+```
+
+When adding new Terraform resources, ensure that they are supported by localstack. You will need to add any new mock
+endpoints the resource requires to the AWS provider in the `main.tf` file.
