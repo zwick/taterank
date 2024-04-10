@@ -1,10 +1,10 @@
-#!/bin/bash
+ #!/bin/bash
 
 echo "Checking dependencies..."
 
 echo "Checking Docker..."
-if ! command -v docker &>/dev/null; then
-  echo "Docker not found. Please install Docker."
+if ! docker info &>/dev/null; then
+  echo "Docker not found or not running. Please install or run Docker daemon."
   exit 1
 else
   echo "Docker is installed."
@@ -27,12 +27,20 @@ else
 fi
 
 echo "Running Terraform..."
+
 docker run --rm --net=host -v "$(pwd)/infrastructure:/app" -w /app hashicorp/terraform:latest init -input=false
+# TO-DO: There might be a better way to purge Dynamo. For now, this works and recreates the tables.
+docker run --rm --net=host -v "$(pwd)/infrastructure:/app" -w /app hashicorp/terraform:latest apply -input=false -auto-approve -destroy
 docker run --rm --net=host -v "$(pwd)/infrastructure:/app" -w /app hashicorp/terraform:latest apply -input=false -auto-approve
+
 echo "Terraform complete!"
+
+echo "Running seed-dynamodb"
+./bin/seed-dynamodb
 
 echo "Spinning down Localstack..."
 docker compose down localstack
 echo "Localstack spun down."
+
 
 echo "Bootstrap complete!"
