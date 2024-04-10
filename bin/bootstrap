@@ -13,15 +13,15 @@ fi
 echo "Checking Golang..."
 if ! command -v go &>/dev/null; then
   echo "Golang not found. Please install Golang."
+  exit 1
 else
   echo "Golang is installed."
 fi
 
 echo "Checking if Localstack container is running..."
 if ! docker ps | grep -q localstack; then
-  echo "Localstack container not found. Starting Localstack..."
-  docker compose up -d localstack
-  echo "Localstack container started."
+  echo "Localstack container not found. Please start the docker container."
+  exit 1
 else
   echo "Localstack container is running, continuing..."
 fi
@@ -37,10 +37,5 @@ echo "Terraform complete!"
 
 echo "Running seed-dynamodb"
 ./bin/seed-dynamodb
-
-echo "Spinning down Localstack..."
-docker compose down localstack
-echo "Localstack spun down."
-
 
 echo "Bootstrap complete!"

@@ -39,8 +39,18 @@ func main() {
 
 	logger.Info("Starting server", "addr", *addr)
 
-	err = http.ListenAndServe(*addr, app.routes())
+	server := &http.Server{
+		Addr:    *addr,
+		Handler: app.routes(),
+	}
 
-	logger.Error(err.Error(), "addr", *addr)
+	err = server.ListenAndServe()
+
+	if err != nil {
+		logger.Error(err.Error(), "addr", *addr)
+	} else {
+		logger.Error("Something went terribly wrong. Stopping server", "addr", *addr)
+	}
+
 	os.Exit(1)
 }
