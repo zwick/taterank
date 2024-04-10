@@ -14,6 +14,12 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
+    services:
+      localstack:
+        image: localstack/localstack
+        ports:
+          - 4566:4566
+
     steps:
     - uses: actions/checkout@v3
 
@@ -21,11 +27,6 @@ jobs:
       uses: actions/setup-go@v4
       with:
         go-version: '1.22'
-
-    - name: Set up Docker
-      uses: addnab/docker-run-action@v3
-      with:
-        image: localstack/localstack:latest
 
     - name: Set up Terraform
       uses: hashicorp/setup-terraform@v3
