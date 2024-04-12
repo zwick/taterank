@@ -1,0 +1,36 @@
+app: taterank-api
+service: taterank-api
+frameworkVersion: "3"
+
+provider:
+  name: aws
+  runtime: provided.al2023
+  iam:
+    role: arn:aws:iam::${aws:accountId}:role/TaterankApi-${sls:stage}
+
+package:
+  exclude:
+    - ./**
+  include:
+    - ./bootstrap
+
+functions:
+  api:
+    handler: bootstrap
+    events:
+      - http:
+          path: /api
+          method: any
+          cors: true
+      - http:
+          path: /api/taters
+          method: any
+          cors: true
+      - http:
+          path: /api/taters/{id}
+          method: any
+          cors: true
+      - http:
+          path: /api/rankings
+          method: any
+          cors: true
