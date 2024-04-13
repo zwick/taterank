@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/julienschmidt/httprouter"
+	"taterank.com/internal/models"
 )
 
 // Get a tater by ID
@@ -57,12 +58,16 @@ func (app *application) listTaters(w http.ResponseWriter, r *http.Request) {
 
 // Update tater
 func (app *application) updateTater(w http.ResponseWriter, r *http.Request) {
-	// params := httprouter.ParamsFromContext(r.Context())
+	params := httprouter.ParamsFromContext(r.Context())
 
-	var input struct {
-		Name        string `json:"name"`
-		Description string `json:"description"`
+	taterID := params.ByName("id")
+
+	if taterID == "" {
+		http.NotFound(w, r)
+		return
 	}
+
+	var input models.Tater
 
 	err := app.readJSON(r, &input)
 
@@ -71,7 +76,16 @@ func (app *application) updateTater(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	app.writeJSON(w, payload{"data": input}, http.StatusOK, nil)
+	input.ID = taterID
+
+	updatedTater, err := app.taters.Update(input)
+
+	if err != nil {
+		app.errorResponse(w, r, http.StatusBadRequest, "failed to update tater")
+		return
+	}
+
+	app.writeJSON(w, payload{"data": updatedTater}, http.StatusOK, nil)
 }
 
 func (app *application) listRankings(w http.ResponseWriter, r *http.Request) {

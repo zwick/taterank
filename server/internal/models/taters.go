@@ -77,3 +77,38 @@ func (m *TaterModel) GetByID(id string) (*Tater, error) {
 
 	return &tater, nil
 }
+
+func (m *TaterModel) Update(tater Tater) (*Tater, error) {
+	update := expression.Set(expression.Name("Description"), expression.Value(tater.Description))
+	update.Set(expression.Name("Name"), expression.Value(tater.Name))
+
+	expr, err := expression.NewBuilder().WithUpdate(update).Build()
+
+	if err != nil {
+		return nil, err
+	}
+
+	input := &dynamodb.UpdateItemInput{
+		Key: map[string]types.AttributeValue{
+			"PK": &types.AttributeValueMemberS{Value: PK},
+			"ID": &types.AttributeValueMemberS{Value: tater.ID},
+		},
+		TableName:                 aws.String(TableName),
+		ExpressionAttributeNames:  expr.Names(),
+		ExpressionAttributeValues: expr.Values(),
+		UpdateExpression:          expr.Update(),
+		ReturnValues:              types.ReturnValueAllNew,
+		ConditionExpression:       aws.String("attribute_exists(PK)"),
+	}
+
+	output, err := m.DB.UpdateItem(context.TODO(), input)
+
+	if err != nil {
+		return nil, err
+	}
+
+	updatedTater := &Tater{}
+	attributevalue.UnmarshalMap(output.Attributes, &updatedTater)
+
+	return updatedTater, nil
+}
