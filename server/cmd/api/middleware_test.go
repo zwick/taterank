@@ -8,7 +8,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"taterank.com/internal/assert"
+	"github.com/stretchr/testify/assert"
 )
 
 var (
@@ -69,5 +69,5 @@ func TestRequestLogger(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	assert.Equals(t, expected, actual)
+	assert.Equal(t, expected, actual)
 }

@@ -14,16 +14,20 @@ var TableName = "Taterank-dev"
 var PK = "Category#Potatoes"
 
 type Tater struct {
-	ID          string `json:"id"`
-	Name        string `json:"name"`
-	Description string `json:"description"`
+	ID string `json:"id"`
+	TaterFields
+}
+
+type TaterFields struct {
+	Name        *string `json:"name" dynamodbav:",omitempty"`
+	Description *string `json:"description" dynamodbav:",omitempty"`
 }
 
 type TaterModel struct {
 	DB *dynamodb.Client
 }
 
-func (m *TaterModel) Get() ([]*Tater, error) {
+func (m *TaterModel) List() ([]*Tater, error) {
 	keyExpression := expression.Key("PK").Equal(expression.Value(PK))
 	expression, err := expression.NewBuilder().WithKeyCondition(keyExpression).Build()
 
@@ -52,7 +56,7 @@ func (m *TaterModel) Get() ([]*Tater, error) {
 }
 
 // Retrieves a tater by ID
-func (m *TaterModel) GetByID(id string) (*Tater, error) {
+func (m *TaterModel) Get(id string) (*Tater, error) {
 	input := &dynamodb.GetItemInput{
 		TableName: aws.String(TableName),
 		Key: map[string]types.AttributeValue{
@@ -78,9 +82,20 @@ func (m *TaterModel) GetByID(id string) (*Tater, error) {
 	return &tater, nil
 }
 
-func (m *TaterModel) Update(tater Tater) (*Tater, error) {
-	update := expression.Set(expression.Name("Description"), expression.Value(tater.Description))
-	update.Set(expression.Name("Name"), expression.Value(tater.Name))
+func (m *TaterModel) Update(id string, fields TaterFields) (*Tater, error) {
+	av, err := attributevalue.MarshalMap(fields)
+
+	if err != nil {
+		return &Tater{}, nil
+	}
+
+	update := expression.UpdateBuilder{}
+
+	// Build the expression dynamically using the output of MarshalMap()
+	// to allow partial updates.
+	for k, v := range av {
+		update = update.Set(expression.Name(k), expression.Value(v))
+	}
 
 	expr, err := expression.NewBuilder().WithUpdate(update).Build()
 
@@ -91,7 +106,7 @@ func (m *TaterModel) Update(tater Tater) (*Tater, error) {
 	input := &dynamodb.UpdateItemInput{
 		Key: map[string]types.AttributeValue{
 			"PK": &types.AttributeValueMemberS{Value: PK},
-			"ID": &types.AttributeValueMemberS{Value: tater.ID},
+			"ID": &types.AttributeValueMemberS{Value: id},
 		},
 		TableName:                 aws.String(TableName),
 		ExpressionAttributeNames:  expr.Names(),
