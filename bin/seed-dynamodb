@@ -8,12 +8,15 @@ AWS_REGION="us-east-1"
 AWS_ACCESS_KEY_ID="test"
 AWS_SECRET_ACCESS_KEY="test"
 
+# Uncomment to seed a real database. You must also comment out CUSTOM_ENDPOINT
+#AWS_ACCESS_KEY_ID=$(aws configure get aws_access_key_id)
+#AWS_SECRET_ACCESS_KEY=$(aws configure get aws_secret_access_key)
+
 # Set the custom endpoint URL
 CUSTOM_ENDPOINT="http://localhost:4566"
 
 # Set the data file path
 DATA_FILE="$(pwd)/seeds/dynamodb-seed-data.json"
-CREDS_FILE="$(pwd)/development/credentials"
 
 # Generate seed filed
 
@@ -24,7 +27,7 @@ docker run --rm \
   -e AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID \
   -e AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \
   $AWS_CLI_IMAGE dynamodb batch-write-item --request-items file:///data.json \
-  --endpoint-url $CUSTOM_ENDPOINT \
-  --region=$AWS_REGION
+  --region=$AWS_REGION \
+  --endpoint-url $CUSTOM_ENDPOINT
 
 echo "Seeding dynamodb complete!"

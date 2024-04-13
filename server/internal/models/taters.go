@@ -12,6 +12,7 @@ import (
 
 var TableName = "Taterank-dev"
 var PK = "Category#Potatoes"
+var TaterPreparationsPrefix = "Preparation#"
 
 type Tater struct {
 	ID          string `json:"id"`
@@ -24,8 +25,8 @@ type TaterModel struct {
 }
 
 func (m *TaterModel) Get() ([]*Tater, error) {
-	keyExpression := expression.Key("PK").Equal(expression.Value(PK))
-	expression, err := expression.NewBuilder().WithKeyCondition(keyExpression).Build()
+	keyExpression := expression.Key("PK").Equal(expression.Value(PK)).And(expression.Key("ID").BeginsWith(TaterPreparationsPrefix))
+	expr, err := expression.NewBuilder().WithKeyCondition(keyExpression).Build()
 
 	if err != nil {
 		return nil, err
@@ -33,9 +34,9 @@ func (m *TaterModel) Get() ([]*Tater, error) {
 
 	input := &dynamodb.QueryInput{
 		TableName:                 aws.String(TableName),
-		KeyConditionExpression:    expression.KeyCondition(),
-		ExpressionAttributeValues: expression.Values(),
-		ExpressionAttributeNames:  expression.Names(),
+		KeyConditionExpression:    expr.KeyCondition(),
+		ExpressionAttributeValues: expr.Values(),
+		ExpressionAttributeNames:  expr.Names(),
 	}
 
 	result, err := m.DB.Query(context.TODO(), input)

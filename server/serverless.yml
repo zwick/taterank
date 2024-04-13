@@ -17,20 +17,26 @@ package:
 functions:
   api:
     handler: bootstrap
+    environment:
+      APP_MODE: "lambda"
     events:
       - http:
           path: /api
           method: any
           cors: true
       - http:
-          path: /api/taters
+          path: /api/v1/taters
           method: any
           cors: true
       - http:
-          path: /api/taters/{id}
+          path: /api/v1/taters/{id}
           method: any
           cors: true
       - http:
-          path: /api/rankings
+          path: /api/v1/rankings
+          method: any
+          cors: true
+      - http:
+          path: /api/v1/ping
           method: any
           cors: true

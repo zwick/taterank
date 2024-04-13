@@ -24,9 +24,14 @@ type application struct {
 
 func main() {
 	addr := flag.String("addr", ":3030", "HTTP network address")
-	appMode := flag.String("app_mode", "lambda", "App mode (http or lambda)")
+	appMode := flag.String("app_mode", os.Getenv("APP_MODE"), "Application mode (http or lambda)")
 
 	flag.Parse()
+
+	// If appMode is empty, default to "http"
+	if *appMode == "" {
+		*appMode = "http"
+	}
 
 	logger := slog.New(slog.NewJSONHandler(os.Stdout, nil))
 
