@@ -82,11 +82,11 @@ func (m *TaterModel) Get(id string) (*Tater, error) {
 	return &tater, nil
 }
 
-func (m *TaterModel) Update(id string, fields TaterFields) (*Tater, error) {
+func (m *TaterModel) Update(id string, fields TaterFields) error {
 	av, err := attributevalue.MarshalMap(fields)
 
 	if err != nil {
-		return &Tater{}, nil
+		return nil
 	}
 
 	update := expression.UpdateBuilder{}
@@ -100,10 +100,10 @@ func (m *TaterModel) Update(id string, fields TaterFields) (*Tater, error) {
 	expr, err := expression.NewBuilder().WithUpdate(update).Build()
 
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	input := &dynamodb.UpdateItemInput{
+	updateInput := &types.Update{
 		Key: map[string]types.AttributeValue{
 			"PK": &types.AttributeValueMemberS{Value: PK},
 			"ID": &types.AttributeValueMemberS{Value: id},
@@ -112,18 +112,22 @@ func (m *TaterModel) Update(id string, fields TaterFields) (*Tater, error) {
 		ExpressionAttributeNames:  expr.Names(),
 		ExpressionAttributeValues: expr.Values(),
 		UpdateExpression:          expr.Update(),
-		ReturnValues:              types.ReturnValueAllNew,
 		ConditionExpression:       aws.String("attribute_exists(PK)"),
 	}
 
-	output, err := m.DB.UpdateItem(context.TODO(), input)
-
-	if err != nil {
-		return nil, err
+	writeInput := &dynamodb.TransactWriteItemsInput{
+		TransactItems: []types.TransactWriteItem{
+			{
+				Update: updateInput,
+			},
+		},
 	}
 
-	updatedTater := &Tater{}
-	attributevalue.UnmarshalMap(output.Attributes, &updatedTater)
+	_, err = m.DB.TransactWriteItems(context.TODO(), writeInput)
 
-	return updatedTater, nil
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

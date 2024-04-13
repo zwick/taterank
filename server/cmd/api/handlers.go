@@ -76,7 +76,7 @@ func (app *application) updateTater(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	updated, err := app.taters.Update(id, fields)
+	err = app.taters.Update(id, fields)
 
 	if err != nil {
 		app.logError(r, err)
@@ -84,7 +84,12 @@ func (app *application) updateTater(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	app.writeJSON(w, payload{"data": updated}, http.StatusOK, nil)
+	updatedTater := models.Tater{
+		ID:          id,
+		TaterFields: fields,
+	}
+
+	app.writeJSON(w, payload{"data": updatedTater}, http.StatusOK, nil)
 }
 
 func (app *application) listRankings(w http.ResponseWriter, r *http.Request) {

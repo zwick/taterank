@@ -130,11 +130,13 @@ func TestTaterModelUpdate(t *testing.T) {
 
 		assert.NotEqual(t, originalTater.TaterFields, fields)
 
-		updatedTater, err := taterModel.Update(originalTater.ID, fields)
+		err = taterModel.Update(originalTater.ID, fields)
 
 		if err != nil {
-			t.Errorf("Error updating tater: %v", err)
+			t.Errorf("Error updating taters: %v", err)
 		}
+
+		updatedTater, _ := taterModel.Get(originalTater.ID)
 
 		assert.Equal(t, originalTater.ID, updatedTater.ID)
 		assert.Equal(t, fields, updatedTater.TaterFields)
@@ -155,11 +157,13 @@ func TestTaterModelUpdate(t *testing.T) {
 			Name: &name,
 		}
 
-		updatedTater, err := taterModel.Update(originalTater.ID, fields)
+		err = taterModel.Update(originalTater.ID, fields)
 
 		if err != nil {
 			t.Errorf("Error updating taters: %v", err)
 		}
+
+		updatedTater, _ := taterModel.Get(originalTater.ID)
 
 		assert.Equal(t, originalTater.ID, updatedTater.ID)
 		assert.Equal(t, originalTater.Description, updatedTater.Description)
@@ -182,11 +186,13 @@ func TestTaterModelUpdate(t *testing.T) {
 			Name: &name,
 		}
 
-		updatedTater, err := taterModel.Update(originalTater.ID, fields)
+		err = taterModel.Update(originalTater.ID, fields)
 
 		if err != nil {
 			t.Errorf("Error updating taters: %v", err)
 		}
+
+		updatedTater, _ := taterModel.Get(originalTater.ID)
 
 		assert.Equal(t, originalTater.ID, updatedTater.ID)
 		assert.Equal(t, originalTater.Description, updatedTater.Description)
@@ -205,7 +211,7 @@ func TestTaterModelUpdate(t *testing.T) {
 
 		var fields TaterFields
 
-		_, err = taterModel.Update("id", fields)
+		err = taterModel.Update("id", fields)
 
 		assert.Error(t, err)
 	})
