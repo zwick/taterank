@@ -5,6 +5,7 @@ import (
 	"log/slog"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"taterank.com/internal/database"
@@ -40,8 +41,12 @@ func main() {
 	logger.Info("Starting server", "addr", *addr)
 
 	server := &http.Server{
-		Addr:    *addr,
-		Handler: app.routes(),
+		Addr:         *addr,
+		Handler:      app.routes(),
+		ErrorLog:     slog.NewLogLogger(logger.Handler(), slog.LevelError),
+		IdleTimeout:  time.Minute,
+		ReadTimeout:  5 * time.Second,
+		WriteTimeout: 10 * time.Second,
 	}
 
 	err = server.ListenAndServe()
