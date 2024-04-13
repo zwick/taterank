@@ -24,7 +24,7 @@ type application struct {
 
 func main() {
 	addr := flag.String("addr", ":3030", "HTTP network address")
-	appMode := flag.String("app_mode", "lambda", "App mode (http or lambda)")
+	appMode := flag.String("app_mode", "http", "App mode (http or lambda)")
 
 	flag.Parse()
 
