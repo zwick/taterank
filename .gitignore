@@ -225,3 +225,6 @@ terraform.tfstate*
 
 # Local test data
 development/tmp-data/*
+
+# Compiled Go app for Lambda
+server/bootstrap

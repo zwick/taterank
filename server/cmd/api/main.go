@@ -7,19 +7,24 @@ import (
 	"os"
 	"time"
 
+	"github.com/aws/aws-lambda-go/lambda"
+
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
+	"github.com/awslabs/aws-lambda-go-api-proxy/httpadapter"
 	"taterank.com/internal/database"
 	"taterank.com/internal/models"
 )
 
 type application struct {
-	logger *slog.Logger
-	db     *dynamodb.Client
-	taters *models.TaterModel
+	logger  *slog.Logger
+	db      *dynamodb.Client
+	taters  *models.TaterModel
+	appMode AppMode
 }
 
 func main() {
 	addr := flag.String("addr", ":3030", "HTTP network address")
+	appMode := flag.String("app_mode", "lambda", "App mode (http or lambda)")
 
 	flag.Parse()
 
@@ -33,29 +38,37 @@ func main() {
 	}
 
 	app := &application{
-		logger: logger,
-		db:     db,
-		taters: &models.TaterModel{DB: db},
+		logger:  logger,
+		db:      db,
+		taters:  &models.TaterModel{DB: db},
+		appMode: AppMode(*appMode),
 	}
 
 	logger.Info("Starting server", "addr", *addr)
 
-	server := &http.Server{
-		Addr:         *addr,
-		Handler:      app.routes(),
-		ErrorLog:     slog.NewLogLogger(logger.Handler(), slog.LevelError),
-		IdleTimeout:  time.Minute,
-		ReadTimeout:  5 * time.Second,
-		WriteTimeout: 10 * time.Second,
+	switch app.appMode {
+	case HTTP:
+		server := &http.Server{
+			Addr:         *addr,
+			Handler:      app.routes(),
+			ErrorLog:     slog.NewLogLogger(logger.Handler(), slog.LevelError),
+			IdleTimeout:  time.Minute,
+			ReadTimeout:  5 * time.Second,
+			WriteTimeout: 10 * time.Second,
+		}
+
+		err = server.ListenAndServe()
+
+		if err != nil {
+			logger.Error(err.Error(), "addr", *addr)
+		}
+		os.Exit(1)
+
+	case Lambda:
+		lambda.Start(httpadapter.New(app.routes()).ProxyWithContext)
+
+	default:
+		logger.Error("Unknown app mode", "appMode", app.appMode)
 	}
 
-	err = server.ListenAndServe()
-
-	if err != nil {
-		logger.Error(err.Error(), "addr", *addr)
-	} else {
-		logger.Error("Something went terribly wrong. Stopping server", "addr", *addr)
-	}
-
-	os.Exit(1)
 }
