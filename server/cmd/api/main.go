@@ -2,10 +2,12 @@ package main
 
 import (
 	"flag"
-	"github.com/aws/aws-lambda-go/lambda"
 	"log/slog"
 	"net/http"
 	"os"
+	"time"
+
+	"github.com/aws/aws-lambda-go/lambda"
 
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/awslabs/aws-lambda-go-api-proxy/httpadapter"
@@ -47,9 +49,14 @@ func main() {
 	switch app.appMode {
 	case HTTP:
 		server := &http.Server{
-			Addr:    *addr,
-			Handler: app.routes(),
+			Addr:         *addr,
+			Handler:      app.routes(),
+			ErrorLog:     slog.NewLogLogger(logger.Handler(), slog.LevelError),
+			IdleTimeout:  time.Minute,
+			ReadTimeout:  5 * time.Second,
+			WriteTimeout: 10 * time.Second,
 		}
+
 		err = server.ListenAndServe()
 
 		if err != nil {

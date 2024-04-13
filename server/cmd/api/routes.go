@@ -1,17 +1,25 @@
 package main
 
-import "net/http"
+import (
+	"net/http"
+
+	"github.com/julienschmidt/httprouter"
+)
 
 func (app *application) routes() http.Handler {
-	mux := http.NewServeMux()
+	router := httprouter.New()
 
 	// Taters
-	mux.HandleFunc("GET /api/taters/{id}", app.getTater)
-	mux.HandleFunc("GET /api/taters", app.listTaters)
+	router.HandlerFunc(http.MethodGet, "/api/v1/taters/:id", app.getTater)
+	router.HandlerFunc(http.MethodPut, "/api/v1/taters/:id", app.updateTater)
+	router.HandlerFunc(http.MethodGet, "/api/v1/taters", app.listTaters)
 
 	// Rankings
-	mux.HandleFunc("GET /api/rankings", app.listRankings)
-	mux.HandleFunc("POST /api/rankings", app.createRanking)
+	router.HandlerFunc(http.MethodGet, "/api/v1/rankings", app.listRankings)
+	router.HandlerFunc(http.MethodPost, "/api/v1/rankings", app.createRanking)
 
-	return app.handlePanic(app.requestLogger(mux))
+	// Healthcheck
+	router.HandlerFunc(http.MethodGet, "/api/v1/ping", app.healthCheck)
+
+	return app.requestLogger(router)
 }

@@ -8,11 +8,15 @@ require (
 	github.com/aws/aws-sdk-go-v2/config v1.27.11
 	github.com/aws/aws-sdk-go-v2/feature/dynamodb/expression v1.7.13
 	github.com/aws/aws-sdk-go-v2/service/dynamodb v1.31.1
+	github.com/awslabs/aws-lambda-go-api-proxy v0.16.1
+	github.com/julienschmidt/httprouter v1.3.0
 )
 
 require (
 	github.com/aws/aws-sdk-go-v2/service/dynamodbstreams v1.20.4 // indirect
-	github.com/awslabs/aws-lambda-go-api-proxy v0.16.1 // indirect
+	github.com/stretchr/testify v1.8.4 // indirect
+	golang.org/x/net v0.21.0 // indirect
+	golang.org/x/sys v0.17.0 // indirect
 )
 
 require (
