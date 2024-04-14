@@ -14,16 +14,21 @@ var TableName = "Taterank-dev"
 var PK = "Category#Potatoes"
 
 type Tater struct {
-	ID          string `json:"id"`
-	Name        string `json:"name"`
-	Description string `json:"description"`
+	ID string `json:"id"`
+	TaterFields
+}
+
+type TaterFields struct {
+	Name        *string `json:"name" dynamodbav:",omitempty"`
+	Description *string `json:"description" dynamodbav:",omitempty"`
 }
 
 type TaterModel struct {
 	DB *dynamodb.Client
 }
 
-func (m *TaterModel) Get() ([]*Tater, error) {
+// Returns a list of all taters
+func (m *TaterModel) List() ([]*Tater, error) {
 	keyExpression := expression.Key("PK").Equal(expression.Value(PK))
 	expression, err := expression.NewBuilder().WithKeyCondition(keyExpression).Build()
 
@@ -52,7 +57,7 @@ func (m *TaterModel) Get() ([]*Tater, error) {
 }
 
 // Retrieves a tater by ID
-func (m *TaterModel) GetByID(id string) (*Tater, error) {
+func (m *TaterModel) Get(id string) (*Tater, error) {
 	input := &dynamodb.GetItemInput{
 		TableName: aws.String(TableName),
 		Key: map[string]types.AttributeValue{
@@ -78,37 +83,53 @@ func (m *TaterModel) GetByID(id string) (*Tater, error) {
 	return &tater, nil
 }
 
-func (m *TaterModel) Update(tater Tater) (*Tater, error) {
-	update := expression.Set(expression.Name("Description"), expression.Value(tater.Description))
-	update.Set(expression.Name("Name"), expression.Value(tater.Name))
+// Updates a tater by ID
+func (m *TaterModel) Update(id string, fields TaterFields) error {
+	av, err := attributevalue.MarshalMap(fields)
+
+	if err != nil {
+		return nil
+	}
+
+	update := expression.UpdateBuilder{}
+
+	// Build the expression dynamically using the output of MarshalMap()
+	// to allow partial updates.
+	for k, v := range av {
+		update = update.Set(expression.Name(k), expression.Value(v))
+	}
 
 	expr, err := expression.NewBuilder().WithUpdate(update).Build()
 
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	input := &dynamodb.UpdateItemInput{
+	updateInput := &types.Update{
 		Key: map[string]types.AttributeValue{
 			"PK": &types.AttributeValueMemberS{Value: PK},
-			"ID": &types.AttributeValueMemberS{Value: tater.ID},
+			"ID": &types.AttributeValueMemberS{Value: id},
 		},
 		TableName:                 aws.String(TableName),
 		ExpressionAttributeNames:  expr.Names(),
 		ExpressionAttributeValues: expr.Values(),
 		UpdateExpression:          expr.Update(),
-		ReturnValues:              types.ReturnValueAllNew,
 		ConditionExpression:       aws.String("attribute_exists(PK)"),
 	}
 
-	output, err := m.DB.UpdateItem(context.TODO(), input)
-
-	if err != nil {
-		return nil, err
+	writeInput := &dynamodb.TransactWriteItemsInput{
+		TransactItems: []types.TransactWriteItem{
+			{
+				Update: updateInput,
+			},
+		},
 	}
 
-	updatedTater := &Tater{}
-	attributevalue.UnmarshalMap(output.Attributes, &updatedTater)
+	_, err = m.DB.TransactWriteItems(context.TODO(), writeInput)
 
-	return updatedTater, nil
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

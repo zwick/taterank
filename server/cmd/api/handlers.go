@@ -19,7 +19,7 @@ func (app *application) getTater(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	tater, err := app.taters.GetByID(taterID)
+	tater, err := app.taters.Get(taterID)
 
 	if err != nil {
 		app.serverErrorResponse(w, r, err)
@@ -41,7 +41,7 @@ func (app *application) getTater(w http.ResponseWriter, r *http.Request) {
 
 // List all taters
 func (app *application) listTaters(w http.ResponseWriter, r *http.Request) {
-	taters, err := app.taters.Get()
+	taters, err := app.taters.List()
 
 	if err != nil {
 		app.serverErrorResponse(w, r, err)
@@ -60,29 +60,33 @@ func (app *application) listTaters(w http.ResponseWriter, r *http.Request) {
 func (app *application) updateTater(w http.ResponseWriter, r *http.Request) {
 	params := httprouter.ParamsFromContext(r.Context())
 
-	taterID := params.ByName("id")
+	id := params.ByName("id")
 
-	if taterID == "" {
+	if id == "" {
 		http.NotFound(w, r)
 		return
 	}
 
-	var input models.Tater
+	var fields models.TaterFields
 
-	err := app.readJSON(r, &input)
+	err := app.readJSON(r, &fields)
 
 	if err != nil {
 		app.badRequestResponse(w, r, err)
 		return
 	}
 
-	input.ID = taterID
-
-	updatedTater, err := app.taters.Update(input)
+	err = app.taters.Update(id, fields)
 
 	if err != nil {
+		app.logError(r, err)
 		app.errorResponse(w, r, http.StatusBadRequest, "failed to update tater")
 		return
+	}
+
+	updatedTater := models.Tater{
+		ID:          id,
+		TaterFields: fields,
 	}
 
 	app.writeJSON(w, payload{"data": updatedTater}, http.StatusOK, nil)
