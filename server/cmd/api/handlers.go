@@ -40,7 +40,7 @@ func (app *application) getTater(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// Update tater
+// Create tater
 func (app *application) createTater(w http.ResponseWriter, r *http.Request) {
 
 	var fields data.TaterFields
