@@ -9,6 +9,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"taterank.com/internal/data"
 )
 
 var (
@@ -46,7 +47,7 @@ func TestRequestLogger(t *testing.T) {
 		w.Write([]byte("OK"))
 	})
 
-	app := &application{logger: mockLogger, db: nil, taters: nil}
+	app := &application{logger: mockLogger, db: nil, models: data.GetModels(nil, nil)}
 
 	app.requestLogger(next).ServeHTTP(rr, r)
 

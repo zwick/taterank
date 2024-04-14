@@ -1,11 +1,12 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
 
 	"github.com/julienschmidt/httprouter"
-	"taterank.com/internal/models"
+	"taterank.com/internal/data"
 )
 
 // Get a tater by ID
@@ -15,11 +16,11 @@ func (app *application) getTater(w http.ResponseWriter, r *http.Request) {
 	taterID := params.ByName("id")
 
 	if taterID == "" {
-		http.NotFound(w, r)
+		app.notFoundResponse(w, r)
 		return
 	}
 
-	tater, err := app.taters.Get(taterID)
+	tater, err := app.models.Taters.Get(taterID)
 
 	if err != nil {
 		app.serverErrorResponse(w, r, err)
@@ -27,7 +28,7 @@ func (app *application) getTater(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if tater == nil {
-		http.NotFound(w, r)
+		app.notFoundResponse(w, r)
 		return
 	}
 
@@ -39,9 +40,44 @@ func (app *application) getTater(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// Update tater
+func (app *application) createTater(w http.ResponseWriter, r *http.Request) {
+
+	var fields data.TaterFields
+
+	err := app.readJSON(r, &fields)
+
+	if err != nil {
+		app.badRequestResponse(w, r, err)
+		return
+	}
+
+	slug, err := app.models.Taters.Create(fields)
+
+	if err != nil {
+		var ds *data.DuplicateSlugError
+		if errors.As(err, &ds) {
+			app.serverErrorResponse(w, r, err)
+			return
+		}
+
+		app.logError(r, err)
+		app.errorResponse(w, r, http.StatusBadRequest, "failed to update")
+		return
+	}
+
+	response := struct {
+		ID *string `json:"id"`
+	}{
+		ID: slug,
+	}
+
+	app.writeJSON(w, payload{"data": response}, http.StatusOK, nil)
+}
+
 // List all taters
 func (app *application) listTaters(w http.ResponseWriter, r *http.Request) {
-	taters, err := app.taters.List()
+	taters, err := app.models.Taters.List()
 
 	if err != nil {
 		app.serverErrorResponse(w, r, err)
@@ -63,11 +99,11 @@ func (app *application) updateTater(w http.ResponseWriter, r *http.Request) {
 	id := params.ByName("id")
 
 	if id == "" {
-		http.NotFound(w, r)
+		app.notFoundResponse(w, r)
 		return
 	}
 
-	var fields models.TaterFields
+	var fields data.TaterFields
 
 	err := app.readJSON(r, &fields)
 
@@ -76,15 +112,16 @@ func (app *application) updateTater(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = app.taters.Update(id, fields)
+	err = app.models.Taters.Update(id, fields)
 
+	// TODO: handle not found error
 	if err != nil {
 		app.logError(r, err)
 		app.errorResponse(w, r, http.StatusBadRequest, "failed to update tater")
 		return
 	}
 
-	updatedTater := models.Tater{
+	updatedTater := data.Tater{
 		ID:          id,
 		TaterFields: fields,
 	}

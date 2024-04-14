@@ -78,3 +78,8 @@ func (app *application) readJSON(r *http.Request, dst any) error {
 
 	return nil
 }
+
+func (app *application) createdResponse(w http.ResponseWriter) {
+	w.WriteHeader(http.StatusCreated)
+	w.Write([]byte{})
+}

@@ -11,14 +11,14 @@ import (
 
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/awslabs/aws-lambda-go-api-proxy/httpadapter"
+	"taterank.com/internal/data"
 	"taterank.com/internal/database"
-	"taterank.com/internal/models"
 )
 
 type application struct {
 	logger  *slog.Logger
 	db      *dynamodb.Client
-	taters  *models.TaterModel
+	models  data.Models
 	appMode AppMode
 }
 
@@ -45,7 +45,7 @@ func main() {
 	app := &application{
 		logger:  logger,
 		db:      db,
-		taters:  &models.TaterModel{DB: db},
+		models:  data.GetModels(db, logger),
 		appMode: AppMode(*appMode),
 	}
 
