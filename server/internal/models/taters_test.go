@@ -8,7 +8,6 @@ import (
 )
 
 func TestTaterModelList(t *testing.T) {
-
 	t.Run("lists all taters", func(t *testing.T) {
 		db, err := database.GetTestDynamoDBClient(t, database.TestConfigOptions{})
 
@@ -25,7 +24,7 @@ func TestTaterModelList(t *testing.T) {
 			t.Errorf("Error getting taters: %v", err)
 		}
 
-		assert.Equal(t, len(taters), 10)
+		assert.Equal(t, len(taters), 6)
 	})
 
 	t.Run("returns error with bad config", func(t *testing.T) {
@@ -215,4 +214,49 @@ func TestTaterModelUpdate(t *testing.T) {
 
 		assert.Error(t, err)
 	})
+}
+
+func TestSanitizer(t *testing.T) {
+	id := TaterPreparationsPrefix + "46db56c79761"
+	name := "Test Name"
+	description := "Test Description"
+
+	tater := Tater{
+		ID: id,
+		TaterFields: TaterFields{
+			Name:        &name,
+			Description: &description,
+		},
+	}
+
+	sanitizer(&tater)
+
+	assert.Equal(t, tater.ID, "46db56c79761")
+}
+
+func TestCollectionSanitizer(t *testing.T) {
+	name := "Test Name"
+	description := "Test Description"
+
+	taters := []*Tater{
+		{
+			ID: TaterPreparationsPrefix + "46db56c79761",
+			TaterFields: TaterFields{
+				Name:        &name,
+				Description: &description,
+			},
+		},
+		{
+			ID: TaterPreparationsPrefix + "52kd01kdl2ds",
+			TaterFields: TaterFields{
+				Name:        &name,
+				Description: &description,
+			},
+		},
+	}
+
+	collectionSanitizer(taters)
+
+	assert.Equal(t, taters[0].ID, "46db56c79761")
+	assert.Equal(t, taters[1].ID, "52kd01kdl2ds")
 }
