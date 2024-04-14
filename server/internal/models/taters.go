@@ -2,6 +2,8 @@ package models
 
 import (
 	"context"
+	"fmt"
+	"strings"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
@@ -12,6 +14,7 @@ import (
 
 var TableName = "Taterank-dev"
 var PK = "Category#Potatoes"
+var TaterPreparationsPrefix = "Preparation#"
 
 type Tater struct {
 	ID string `json:"id"`
@@ -29,8 +32,8 @@ type TaterModel struct {
 
 // Returns a list of all taters
 func (m *TaterModel) List() ([]*Tater, error) {
-	keyExpression := expression.Key("PK").Equal(expression.Value(PK))
-	expression, err := expression.NewBuilder().WithKeyCondition(keyExpression).Build()
+	keyExpression := expression.Key("PK").Equal(expression.Value(PK)).And(expression.Key("ID").BeginsWith(TaterPreparationsPrefix))
+	expr, err := expression.NewBuilder().WithKeyCondition(keyExpression).Build()
 
 	if err != nil {
 		return nil, err
@@ -38,9 +41,9 @@ func (m *TaterModel) List() ([]*Tater, error) {
 
 	input := &dynamodb.QueryInput{
 		TableName:                 aws.String(TableName),
-		KeyConditionExpression:    expression.KeyCondition(),
-		ExpressionAttributeValues: expression.Values(),
-		ExpressionAttributeNames:  expression.Names(),
+		KeyConditionExpression:    expr.KeyCondition(),
+		ExpressionAttributeValues: expr.Values(),
+		ExpressionAttributeNames:  expr.Names(),
 	}
 
 	result, err := m.DB.Query(context.TODO(), input)
@@ -52,6 +55,7 @@ func (m *TaterModel) List() ([]*Tater, error) {
 	taters := []*Tater{}
 
 	attributevalue.UnmarshalListOfMaps(result.Items, &taters)
+	collectionSanitizer(taters)
 
 	return taters, nil
 }
@@ -62,11 +66,15 @@ func (m *TaterModel) Get(id string) (*Tater, error) {
 		TableName: aws.String(TableName),
 		Key: map[string]types.AttributeValue{
 			"PK": &types.AttributeValueMemberS{Value: PK},
-			"ID": &types.AttributeValueMemberS{Value: id},
+			"ID": &types.AttributeValueMemberS{Value: TaterPreparationsPrefix + id},
 		},
 	}
 
 	result, err := m.DB.GetItem(context.TODO(), input)
+
+	if result == nil {
+		return nil, fmt.Errorf("error getting tater")
+	}
 
 	if err != nil {
 		return nil, err
@@ -79,6 +87,7 @@ func (m *TaterModel) Get(id string) (*Tater, error) {
 	tater := Tater{}
 
 	attributevalue.UnmarshalMap(result.Item, &tater)
+	sanitizer(&tater)
 
 	return &tater, nil
 }
@@ -108,7 +117,7 @@ func (m *TaterModel) Update(id string, fields TaterFields) error {
 	updateInput := &types.Update{
 		Key: map[string]types.AttributeValue{
 			"PK": &types.AttributeValueMemberS{Value: PK},
-			"ID": &types.AttributeValueMemberS{Value: id},
+			"ID": &types.AttributeValueMemberS{Value: TaterPreparationsPrefix + id},
 		},
 		TableName:                 aws.String(TableName),
 		ExpressionAttributeNames:  expr.Names(),
@@ -132,4 +141,16 @@ func (m *TaterModel) Update(id string, fields TaterFields) error {
 	}
 
 	return nil
+}
+
+// Given a Tater, this function will remove the TaterPreparationsPrefix from the ID
+func sanitizer(data *Tater) {
+	data.ID = strings.Split(data.ID, TaterPreparationsPrefix)[1]
+}
+
+// Given a collection of Taters, this function will remove the TaterPreparationsPrefix from the ID
+func collectionSanitizer(data []*Tater) {
+	for _, tater := range data {
+		sanitizer(tater)
+	}
 }

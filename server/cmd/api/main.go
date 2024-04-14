@@ -24,9 +24,14 @@ type application struct {
 
 func main() {
 	addr := flag.String("addr", ":3030", "HTTP network address")
-	appMode := flag.String("app_mode", "http", "App mode (http or lambda)")
+	appMode := flag.String("app_mode", os.Getenv("APP_MODE"), "Application mode (http or lambda)")
 
 	flag.Parse()
+
+	// If appMode is empty, default to "http"
+	if *appMode == "" {
+		*appMode = "http"
+	}
 
 	logger := slog.New(slog.NewJSONHandler(os.Stdout, nil))
 
@@ -62,13 +67,12 @@ func main() {
 		if err != nil {
 			logger.Error(err.Error(), "addr", *addr)
 		}
-		os.Exit(1)
 
+		os.Exit(1)
 	case Lambda:
 		lambda.Start(httpadapter.New(app.routes()).ProxyWithContext)
 
 	default:
 		logger.Error("Unknown app mode", "appMode", app.appMode)
 	}
-
 }
