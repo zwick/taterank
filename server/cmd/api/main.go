@@ -67,13 +67,12 @@ func main() {
 		if err != nil {
 			logger.Error(err.Error(), "addr", *addr)
 		}
-		os.Exit(1)
 
+		os.Exit(1)
 	case Lambda:
 		lambda.Start(httpadapter.New(app.routes()).ProxyWithContext)
 
 	default:
 		logger.Error("Unknown app mode", "appMode", app.appMode)
 	}
-
 }

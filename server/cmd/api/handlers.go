@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/julienschmidt/httprouter"
+	"taterank.com/internal/models"
 )
 
 // Get a tater by ID
@@ -18,7 +19,7 @@ func (app *application) getTater(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	tater, err := app.taters.GetByID(taterID)
+	tater, err := app.taters.Get(taterID)
 
 	if err != nil {
 		app.serverErrorResponse(w, r, err)
@@ -40,7 +41,7 @@ func (app *application) getTater(w http.ResponseWriter, r *http.Request) {
 
 // List all taters
 func (app *application) listTaters(w http.ResponseWriter, r *http.Request) {
-	taters, err := app.taters.Get()
+	taters, err := app.taters.List()
 
 	if err != nil {
 		app.serverErrorResponse(w, r, err)
@@ -57,21 +58,38 @@ func (app *application) listTaters(w http.ResponseWriter, r *http.Request) {
 
 // Update tater
 func (app *application) updateTater(w http.ResponseWriter, r *http.Request) {
-	// params := httprouter.ParamsFromContext(r.Context())
+	params := httprouter.ParamsFromContext(r.Context())
 
-	var input struct {
-		Name        string `json:"name"`
-		Description string `json:"description"`
+	id := params.ByName("id")
+
+	if id == "" {
+		http.NotFound(w, r)
+		return
 	}
 
-	err := app.readJSON(r, &input)
+	var fields models.TaterFields
+
+	err := app.readJSON(r, &fields)
 
 	if err != nil {
 		app.badRequestResponse(w, r, err)
 		return
 	}
 
-	app.writeJSON(w, payload{"data": input}, http.StatusOK, nil)
+	err = app.taters.Update(id, fields)
+
+	if err != nil {
+		app.logError(r, err)
+		app.errorResponse(w, r, http.StatusBadRequest, "failed to update tater")
+		return
+	}
+
+	updatedTater := models.Tater{
+		ID:          id,
+		TaterFields: fields,
+	}
+
+	app.writeJSON(w, payload{"data": updatedTater}, http.StatusOK, nil)
 }
 
 func (app *application) listRankings(w http.ResponseWriter, r *http.Request) {
