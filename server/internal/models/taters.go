@@ -27,6 +27,7 @@ type TaterModel struct {
 	DB *dynamodb.Client
 }
 
+// Returns a list of all taters
 func (m *TaterModel) List() ([]*Tater, error) {
 	keyExpression := expression.Key("PK").Equal(expression.Value(PK))
 	expression, err := expression.NewBuilder().WithKeyCondition(keyExpression).Build()
@@ -82,6 +83,7 @@ func (m *TaterModel) Get(id string) (*Tater, error) {
 	return &tater, nil
 }
 
+// Updates a tater by ID
 func (m *TaterModel) Update(id string, fields TaterFields) error {
 	av, err := attributevalue.MarshalMap(fields)
 
