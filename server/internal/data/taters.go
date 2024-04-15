@@ -26,8 +26,8 @@ type Tater struct {
 }
 
 type TaterFields struct {
-	Name        *string `json:"name" dynamodbav:",omitempty"`
-	Description *string `json:"description" dynamodbav:",omitempty"`
+	Name        string `json:"name" dynamodbav:",omitempty"`
+	Description string `json:"description" dynamodbav:",omitempty"`
 }
 
 type TaterModel struct {
@@ -186,6 +186,9 @@ func (m *TaterModel) Create(fields TaterFields) (*string, error) {
 
 		_, err = m.DB.PutItem(context.TODO(), putInput)
 
+		// If the error is a ConditionalCheckFailedException,
+		// we know that the slug is a duplicate and we should retry, otherwise,
+		// we return the error.
 		if err != nil {
 			var ccf *types.ConditionalCheckFailedException
 			if errors.As(err, &ccf) {
