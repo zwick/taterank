@@ -45,7 +45,40 @@ func TestTaterModelList(t *testing.T) {
 
 func TestTaterModelGet(t *testing.T) {
 
-	t.Run("gets taters by ID", func(t *testing.T) {
+	t.Run("gets tater by ID", func(t *testing.T) {
+		db, err := database.GetTestDynamoDBClient(t, database.TestConfigOptions{})
+
+		if err != nil {
+			t.Errorf("Error getting DynamoDB client: %v", err)
+		}
+
+		taterModel := TaterModel{DB: db}
+		name := "Test Tater"
+		description := "This is a test taters"
+
+		input := TaterFields{
+			Name:        &name,
+			Description: &description,
+		}
+
+		id, err := taterModel.Create(input)
+
+		if err != nil {
+			t.Errorf("Error creating tater: %v", err)
+		}
+
+		tater, err := taterModel.Get(*id)
+
+		if err != nil {
+			t.Errorf("Error getting tater: %v", err)
+		}
+
+		assert.Equal(t, tater.ID, *id)
+		assert.Equal(t, *tater.Name, name)
+		assert.Equal(t, *tater.Description, description)
+	})
+
+	t.Run("returns error for non-existent tater", func(t *testing.T) {
 		db, err := database.GetTestDynamoDBClient(t, database.TestConfigOptions{})
 
 		if err != nil {
@@ -54,34 +87,14 @@ func TestTaterModelGet(t *testing.T) {
 
 		taterModel := TaterModel{DB: db}
 
-		tests := []struct {
-			id          string
-			expected    bool
-			Name        string
-			Description string
-		}{
-			{"46db56c79761", true, "Curly Fries", "Curly fries are a type of French fry characterized by their helical shape, which is formed by cutting the potato in a spiral shape before frying."},
-			{"abc1234", false, "", ""},
+		// Get the Taters
+		result, err := taterModel.Get("id-that-definitely-does-not-exist")
+
+		if err != nil {
+			t.Errorf("Error getting tater: %v", err)
 		}
 
-		for _, test := range tests {
-			tater, err := taterModel.Get(test.id)
-
-			if err != nil {
-				t.Errorf("Error getting tater: %v", err)
-			}
-
-			if test.expected {
-				assert.Equal(t, tater.ID, test.id)
-				assert.Equal(t, *tater.Name, test.Name)
-				assert.Equal(t, *tater.Description, test.Description)
-			} else {
-				if tater != nil {
-					t.Errorf("Expected tater to be nil, got: %v", tater)
-				}
-			}
-
-		}
+		assert.Empty(t, result)
 	})
 
 	t.Run("returns error with bad config", func(t *testing.T) {
