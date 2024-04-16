@@ -26,8 +26,8 @@ type Tater struct {
 }
 
 type TaterFields struct {
-	Name        string `json:"name" dynamodbav:",omitempty"`
-	Description string `json:"description" dynamodbav:",omitempty"`
+	Name        *string `json:"name" dynamodbav:",omitempty"`
+	Description *string `json:"description" dynamodbav:",omitempty"`
 }
 
 type TaterModel struct {

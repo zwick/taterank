@@ -33,8 +33,8 @@ func TestTaterModelGet(t *testing.T) {
 	t.Run("gets tater by ID", func(t *testing.T) {
 		testBag := setup(t)
 
-		name := "Test Tater"
-		description := "This is a test taters"
+		name := strPtr("Test Tater")
+		description := strPtr("This is a test tater")
 
 		input := TaterFields{
 			Name:        name,
@@ -81,8 +81,8 @@ func TestTaterModelUpdate(t *testing.T) {
 		originalTater := testBag.createTestTater("Test Tater", "This is a test tater")
 
 		fields := TaterFields{
-			Name:        "Amazing Potatoes",
-			Description: "Are with you always!",
+			Name:        strPtr("Amazing Potatoes"),
+			Description: strPtr("Are with you always!"),
 		}
 
 		assert.NotEqual(t, originalTater, fields)
@@ -105,7 +105,7 @@ func TestTaterModelUpdate(t *testing.T) {
 		name := "My New Name"
 
 		fields := TaterFields{
-			Name: name,
+			Name: strPtr(name),
 		}
 
 		err := testBag.model.Update(originalTater.ID, fields)
@@ -126,7 +126,7 @@ func TestTaterModelUpdate(t *testing.T) {
 		originalTater := testBag.createTestTater("Test Tatert", "This is a test tater")
 
 		fields := TaterFields{
-			Name: "",
+			Name: strPtr(""),
 		}
 
 		err := testBag.model.Update(originalTater.ID, fields)
@@ -164,8 +164,8 @@ func TestSanitizer(t *testing.T) {
 	tater := Tater{
 		ID: id,
 		TaterFields: TaterFields{
-			Name:        "Test Name",
-			Description: "Test Description",
+			Name:        strPtr("Test Name"),
+			Description: strPtr("Test Description"),
 		},
 	}
 
@@ -182,15 +182,15 @@ func TestCollectionSanitizer(t *testing.T) {
 		{
 			ID: TaterPreparationsPrefix + "46db56c79761",
 			TaterFields: TaterFields{
-				Name:        name,
-				Description: description,
+				Name:        strPtr(name),
+				Description: strPtr(description),
 			},
 		},
 		{
 			ID: TaterPreparationsPrefix + "52kd01kdl2ds",
 			TaterFields: TaterFields{
-				Name:        name,
-				Description: description,
+				Name:        strPtr(name),
+				Description: strPtr(description),
 			},
 		},
 	}
@@ -220,10 +220,14 @@ func setup(t *testing.T) TestBag {
 	return bag
 }
 
+func strPtr(s string) *string {
+	return &s
+}
+
 func (b *TestBag) createTestTater(name string, description string) *Tater {
 	id, err := b.model.Create(TaterFields{
-		Name:        name,
-		Description: description,
+		Name:        strPtr(name),
+		Description: strPtr(description),
 	})
 
 	assert.NoError(b.t, err)
