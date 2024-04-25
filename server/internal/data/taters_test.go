@@ -158,6 +158,77 @@ func TestTaterModelUpdate(t *testing.T) {
 	})
 }
 
+func TestTaterModelCreate(t *testing.T) {
+	t.Run("creates tater with all fields", func(t *testing.T) {
+		testBag := setup(t)
+
+		fields := TaterFields{
+			Name:        strPtr("Amazing Potatoes"),
+			Description: strPtr("Are with you always!"),
+		}
+
+		id, err := testBag.model.Create(fields)
+		assert.NoError(t, err)
+		assert.NotEmpty(t, id)
+
+		tater, err := testBag.model.Get(*id)
+		assert.NoError(t, err)
+
+		assert.Equal(t, &tater.ID, id)
+		assert.Equal(t, tater.TaterFields, fields)
+	})
+
+	t.Run("creates tater with some fields", func(t *testing.T) {
+		testBag := setup(t)
+
+		fieldsWithName := TaterFields{
+			Name: strPtr("Amazing Potatoes"),
+		}
+
+		id, err := testBag.model.Create(fieldsWithName)
+
+		assert.NoError(t, err)
+		assert.NotEmpty(t, id)
+
+		tater, err := testBag.model.Get(*id)
+
+		assert.NoError(t, err)
+		assert.Equal(t, &tater.ID, id)
+		assert.Equal(t, tater.TaterFields, fieldsWithName)
+
+		fieldsWithDescription := TaterFields{
+			Description: strPtr("Neat Potato Description!"),
+		}
+
+		id, err = testBag.model.Create(fieldsWithDescription)
+
+		assert.NoError(t, err)
+		assert.NotEmpty(t, id)
+
+		tater, err = testBag.model.Get(*id)
+
+		assert.NoError(t, err)
+		assert.Equal(t, &tater.ID, id)
+		assert.Equal(t, tater.TaterFields, fieldsWithDescription)
+	})
+
+	t.Run("returns error with bad config", func(t *testing.T) {
+		db, err := database.GetTestDynamoDBClient(t, database.TestConfigOptions{Endpoint: "bad"})
+
+		if err != nil {
+			t.Errorf("Error getting DynamoDB client: %v", err)
+		}
+
+		taterModel := TaterModel{DB: db}
+
+		var fields TaterFields
+
+		_, err = taterModel.Create(fields)
+
+		assert.Error(t, err)
+	})
+}
+
 func TestSanitizer(t *testing.T) {
 	id := TaterPreparationsPrefix + "46db56c79761"
 
