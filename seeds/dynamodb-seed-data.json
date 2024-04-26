@@ -12,79 +12,6 @@
     {
       "PutRequest": {
         "Item": {
-          "Name": { "S": "Potatoes" },
-          "PK": { "S": "Category#Potatoes" },
-          "ID": { "S": "Meta" },
-          "Image": { "S": "https://via.placeholder.com/65x65" }
-        }
-      }
-    },
-    {
-      "PutRequest": {
-        "Item": {
-          "Name": { "S": "Curly Fries" },
-          "Description": {
-            "S": "Curly fries are a type of French fry characterized by their helical shape, which is formed by cutting the potato in a spiral shape before frying."
-          },
-          "PK": { "S": "Category#Potatoes" },
-          "ID": { "S": "Preparation#46db56c79761" },
-          "Image": { "S": "https://via.placeholder.com/65x65" }
-        }
-      }
-    },
-    {
-      "PutRequest": {
-        "Item": {
-          "Name": { "S": "Potato Salad" },
-          "PK": { "S": "Category#Potatoes" },
-          "ID": { "S": "Preparation#482f9321c25d" },
-          "Image": { "S": "https://via.placeholder.com/65x65" }
-        }
-      }
-    },
-    {
-      "PutRequest": {
-        "Item": {
-          "Name": { "S": "Mashed Potatoes" },
-          "PK": { "S": "Category#Potatoes" },
-          "ID": { "S": "Preparation#0c99db545a49" },
-          "Image": { "S": "https://via.placeholder.com/65x65" }
-        }
-      }
-    },
-    {
-      "PutRequest": {
-        "Item": {
-          "Name": { "S": "Potato Chips" },
-          "PK": { "S": "Category#Potatoes" },
-          "ID": { "S": "Preparation#8372d4321db8" },
-          "Image": { "S": "https://via.placeholder.com/65x65" }
-        }
-      }
-    },
-    {
-      "PutRequest": {
-        "Item": {
-          "Name": { "S": "French Fries" },
-          "PK": { "S": "Category#Potatoes" },
-          "ID": { "S": "Preparation#ea61f4403b76" },
-          "Image": { "S": "https://via.placeholder.com/65x65" }
-        }
-      }
-    },
-    {
-      "PutRequest": {
-        "Item": {
-          "Name": { "S": "Baked Potato" },
-          "PK": { "S": "Category#Potatoes" },
-          "ID": { "S": "Preparation#3f64d05b79a0" },
-          "Image": { "S": "https://via.placeholder.com/65x65" }
-        }
-      }
-    },
-    {
-      "PutRequest": {
-        "Item": {
           "PK": { "S": "Rankings#Potatoes" },
           "ID": { "S": "Ranking#03ca26e8a8ca" },
           "User": { "S": "User#b47265f1e8f1" },
@@ -103,30 +30,260 @@
     {
       "PutRequest": {
         "Item": {
-          "PK": { "S": "Rankings#Potatoes#Votes" },
-          "ID": { "S": "Ranking#03ca26e8a8ca#User#cd8dee23799f" },
-          "User": { "S": "User#cd8dee23799f" },
-          "Types": { "SS": ["upvote"] }
+          "Name": { "S": "Russet Potato" },
+          "PK": { "S": "Category#Potatoes" },
+          "ID": { "S": "Preparation#123456789" },
+          "Image": { "S": "https://via.placeholder.com/65x65" },
+          "Description": {
+            "S": "The Russet potato is a starchy potato variety with a fluffy texture and a mild, earthy flavor. It is commonly used for baking, mashing, and frying."
+          }
         }
       }
     },
     {
       "PutRequest": {
         "Item": {
-          "PK": { "S": "Rankings#Potatoes#Votes" },
-          "ID": { "S": "Ranking#03ca26e8a8ca#User#e35f3080e4a5" },
-          "User": { "S": "Session#e35f3080e4a5" },
-          "Types": { "SS": ["upvote"] }
+          "Name": { "S": "Yukon Gold Potato" },
+          "PK": { "S": "Category#Potatoes" },
+          "ID": { "S": "Preparation#987654321" },
+          "Image": { "S": "https://via.placeholder.com/65x65" },
+          "Description": {
+            "S": "The Yukon Gold potato is a versatile potato variety with a buttery yellow flesh and a creamy texture. It is great for boiling, roasting, and making mashed potatoes."
+          }
         }
       }
     },
     {
       "PutRequest": {
         "Item": {
-          "PK": { "S": "Rankings#Potatoes#Votes" },
-          "ID": { "S": "Ranking#03ca26e8a8ca#User#9e0a818b35d3" },
-          "User": { "S": "Session#9e0a818b35d3" },
-          "Types": { "SS": ["downvote", "hot-take"] }
+          "Name": { "S": "Red Potato" },
+          "PK": { "S": "Category#Potatoes" },
+          "ID": { "S": "Preparation#abcdef123" },
+          "Image": { "S": "https://via.placeholder.com/65x65" },
+          "Description": {
+            "S": "The Red potato is a waxy potato variety with a smooth, thin skin and a firm, creamy flesh. It is perfect for salads, roasting, and boiling."
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "Name": { "S": "Purple Potato" },
+          "PK": { "S": "Category#Potatoes" },
+          "ID": { "S": "Preparation#456789abc" },
+          "Image": { "S": "https://via.placeholder.com/65x65" },
+          "Description": {
+            "S": "The Purple potato is a vibrant potato variety with a deep purple skin and flesh. It has a slightly sweet flavor and is great for roasting, mashing, and making colorful dishes."
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "Name": { "S": "Fingerling Potato" },
+          "PK": { "S": "Category#Potatoes" },
+          "ID": { "S": "Preparation#def123456" },
+          "Image": { "S": "https://via.placeholder.com/65x65" },
+          "Description": {
+            "S": "The Fingerling potato is a small, elongated potato variety with a thin skin and a buttery, nutty flavor. It is great for roasting, grilling, and adding to salads."
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "Name": { "S": "New Potato" },
+          "PK": { "S": "Category#Potatoes" },
+          "ID": { "S": "Preparation#789abcdef" },
+          "Image": { "S": "https://via.placeholder.com/65x65" },
+          "Description": {
+            "S": "The New potato is a young potato harvested before it reaches maturity. It has a thin, delicate skin and a creamy texture. It is often boiled or roasted and served with butter and herbs."
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "Name": { "S": "Sweet Potato Fries" },
+          "PK": { "S": "Category#Potatoes" },
+          "ID": { "S": "Preparation#cdef12345" },
+          "Image": { "S": "https://via.placeholder.com/65x65" },
+          "Description": {
+            "S": "Sweet potato fries are a delicious and healthier alternative to regular fries. They are made from sweet potatoes, which have a naturally sweet flavor and a crispy texture when baked or fried."
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "Name": { "S": "Purple Sweet Potato" },
+          "PK": { "S": "Category#Potatoes" },
+          "ID": { "S": "Preparation#56789abcd" },
+          "Image": { "S": "https://via.placeholder.com/65x65" },
+          "Description": {
+            "S": "The Purple sweet potato is a vibrant and nutritious variety of sweet potato with a purple flesh. It has a slightly sweet and nutty flavor and can be used in both sweet and savory dishes."
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "Name": { "S": "Japanese Sweet Potato" },
+          "PK": { "S": "Category#Potatoes" },
+          "ID": { "S": "Preparation#ef1234567" },
+          "Image": { "S": "https://via.placeholder.com/65x65" },
+          "Description": {
+            "S": "The Japanese sweet potato is a popular variety of sweet potato in Japan. It has a reddish-purple skin and a creamy, sweet flesh. It is often roasted or steamed and enjoyed as a side dish or dessert."
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "Name": { "S": "Purple Majesty Potato" },
+          "PK": { "S": "Category#Potatoes" },
+          "ID": { "S": "Preparation#89abcdef0" },
+          "Image": { "S": "https://via.placeholder.com/65x65" },
+          "Description": {
+            "S": "The Purple Majesty potato is a unique variety of potato with a deep purple skin and flesh. It has a rich, earthy flavor and is great for roasting, mashing, and making colorful dishes."
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "Name": { "S": "Baby Potato" },
+          "PK": { "S": "Category#Potatoes" },
+          "ID": { "S": "Preparation#f12345678" },
+          "Image": { "S": "https://via.placeholder.com/65x65" },
+          "Description": {
+            "S": "Baby potatoes are small, young potatoes that are harvested before they reach maturity. They have a thin, delicate skin and a creamy texture. They are often boiled or roasted and served as a side dish or in salads."
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "Name": { "S": "Purple Viking Potato" },
+          "PK": { "S": "Category#Potatoes" },
+          "ID": { "S": "Preparation#9abcdef01" },
+          "Image": { "S": "https://via.placeholder.com/65x65" },
+          "Description": {
+            "S": "The Purple Viking potato is a colorful variety of potato with a purple skin and white flesh. It has a mild, buttery flavor and is great for boiling, baking, and making colorful dishes."
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "Name": { "S": "Golden Potato" },
+          "PK": { "S": "Category#Potatoes" },
+          "ID": { "S": "Preparation#123456789a" },
+          "Image": { "S": "https://via.placeholder.com/65x65" },
+          "Description": {
+            "S": "The Golden potato is a yellow-fleshed potato variety with a creamy texture and a slightly sweet flavor. It is great for boiling, mashing, and making potato salads."
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "Name": { "S": "Purple Peruvian Potato" },
+          "PK": { "S": "Category#Potatoes" },
+          "ID": { "S": "Preparation#bcdef01234" },
+          "Image": { "S": "https://via.placeholder.com/65x65" },
+          "Description": {
+            "S": "The Purple Peruvian potato is a small, fingerling potato variety with a purple skin and flesh. It has a nutty flavor and is great for roasting, grilling, and adding color to dishes."
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "Name": { "S": "German Butterball Potato" },
+          "PK": { "S": "Category#Potatoes" },
+          "ID": { "S": "Preparation#cdef012345" },
+          "Image": { "S": "https://via.placeholder.com/65x65" },
+          "Description": {
+            "S": "The German Butterball potato is a versatile potato variety with a golden skin and flesh. It has a buttery, creamy flavor and is great for baking, mashing, and making potato salads."
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "Name": { "S": "Purple Sweet Potato Fries" },
+          "PK": { "S": "Category#Potatoes" },
+          "ID": { "S": "Preparation#23456789ab" },
+          "Image": { "S": "https://via.placeholder.com/65x65" },
+          "Description": {
+            "S": "Purple sweet potato fries are a colorful and delicious alternative to regular fries. They are made from purple sweet potatoes, which have a naturally sweet flavor and a crispy texture when baked or fried."
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "Name": { "S": "Red Thumb Potato" },
+          "PK": { "S": "Category#Potatoes" },
+          "ID": { "S": "Preparation#cdef0123456" },
+          "Image": { "S": "https://via.placeholder.com/65x65" },
+          "Description": {
+            "S": "The Red Thumb potato is a small, fingerling potato variety with a red skin and flesh. It has a creamy texture and a slightly sweet, nutty flavor. It is great for roasting, grilling, and adding color to dishes."
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "Name": { "S": "Purple Majesty Potato Chips" },
+          "PK": { "S": "Category#Potatoes" },
+          "ID": { "S": "Preparation#3456789abc" },
+          "Image": { "S": "https://via.placeholder.com/65x65" },
+          "Description": {
+            "S": "Purple Majesty potato chips are made from the vibrant Purple Majesty potato variety. They have a rich, earthy flavor and a crispy texture. They are a colorful and delicious snack."
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "Name": { "S": "German Butterball Potato Salad" },
+          "PK": { "S": "Category#Potatoes" },
+          "ID": { "S": "Preparation#cdef01234567" },
+          "Image": { "S": "https://via.placeholder.com/65x65" },
+          "Description": {
+            "S": "German Butterball potato salad is a classic dish made with boiled German Butterball potatoes, mayonnaise, mustard, onions, and various seasonings. It is a creamy and flavorful side dish."
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "Name": { "S": "Purple Viking Potato Soup" },
+          "PK": { "S": "Category#Potatoes" },
+          "ID": { "S": "Preparation#def012345678" },
+          "Image": { "S": "https://via.placeholder.com/65x65" },
+          "Description": {
+            "S": "Purple Viking potato soup is a hearty and colorful soup made with Purple Viking potatoes, onions, garlic, vegetable broth, and various seasonings. It is a comforting and flavorful dish."
+          }
         }
       }
     },

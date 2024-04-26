@@ -1,8 +1,11 @@
-package models
+package data
 
 import (
 	"context"
+	"errors"
 	"fmt"
+	"log/slog"
+	"maps"
 	"strings"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
@@ -10,6 +13,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/expression"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
+	"github.com/sio/coolname"
 )
 
 var TableName = "Taterank-dev"
@@ -27,7 +31,8 @@ type TaterFields struct {
 }
 
 type TaterModel struct {
-	DB *dynamodb.Client
+	DB     *dynamodb.Client
+	Logger *slog.Logger
 }
 
 // Returns a list of all taters
@@ -141,6 +146,69 @@ func (m *TaterModel) Update(id string, fields TaterFields) error {
 	}
 
 	return nil
+}
+
+// Creates a new tater
+func (m *TaterModel) Create(fields TaterFields) (*string, error) {
+	av, err := attributevalue.MarshalMap(fields)
+
+	if err != nil {
+		return nil, err
+	}
+
+	retryLimit := 3
+	retries := 0
+
+	var slug string
+
+	for retries < retryLimit {
+		retries++
+
+		slug, err = coolname.SlugN(3)
+
+		if err != nil {
+			return nil, err
+		}
+
+		item := map[string]types.AttributeValue{
+			"PK": &types.AttributeValueMemberS{Value: PK},
+			"ID": &types.AttributeValueMemberS{Value: TaterPreparationsPrefix + slug},
+		}
+
+		maps.Copy(item, av)
+
+		putInput := &dynamodb.PutItemInput{
+			TableName:           aws.String(TableName),
+			Item:                item,
+			ConditionExpression: aws.String("attribute_not_exists(ID)"),
+			ReturnValues:        types.ReturnValueAllOld,
+		}
+
+		_, err = m.DB.PutItem(context.TODO(), putInput)
+
+		// If the error is a ConditionalCheckFailedException,
+		// we know that the slug is a duplicate and we should retry, otherwise,
+		// we return the error.
+		if err != nil {
+			var ccf *types.ConditionalCheckFailedException
+			if errors.As(err, &ccf) {
+
+				m.Logger.Warn(fmt.Sprintf("duplicate slug: '%v' retrying", slug), "retries", retries)
+
+				if retries >= retryLimit {
+					return nil, &DuplicateSlugError{}
+				}
+
+				continue
+			} else {
+				return nil, err
+			}
+		}
+
+		break
+	}
+
+	return &slug, nil
 }
 
 // Given a Tater, this function will remove the TaterPreparationsPrefix from the ID
